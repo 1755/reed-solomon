@@ -11,6 +11,3 @@ public:
     Decoder(int t, int m);
     vector<int> decode(vector<int> message);
 };
-
-
-#endif //REEDSOLOMON_DECODER_H

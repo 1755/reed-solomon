@@ -14,6 +14,20 @@ int Value::get_value() {
 }
 
 
+Value Value::operator=(const Value &rv) {
+    return rv;
+}
+
+bool Value::operator==(const Value &rv) {
+    return (value == rv.value);
+}
+
+
+bool Value::operator!=(const Value &rv) {
+    return (value != rv.value);
+}
+
+
 Value Value::operator+(const Value &rv) {
     return Value(value ^ rv.value);
 }

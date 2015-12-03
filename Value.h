@@ -34,4 +34,10 @@ public:
     Value operator+(const Value &rv);
 
     Value operator*(const Value &rv);
+
+    Value operator=(const Value &rv);
+
+    bool operator==(const Value &rv);
+
+    bool operator!=(const Value &rv);
 };
