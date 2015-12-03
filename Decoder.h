@@ -1,10 +1,4 @@
-//
-// Created by sergey on 03.12.15.
-//
-
-#ifndef REEDSOLOMON_DECODER_H
-#define REEDSOLOMON_DECODER_H
-
+#pragma once
 #include <vector>
 
 using namespace std;
