@@ -3,5 +3,5 @@ project(reed_solomon)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(SOURCE_FILES main.cpp Coder.cpp Coder.h Decoder.cpp Decoder.h Value.cpp Value.h)
+set(SOURCE_FILES main.cpp Coder.cpp Coder.h Decoder.cpp Decoder.h Value.cpp Value.h README.md)
 add_executable(reed_solomon ${SOURCE_FILES})
