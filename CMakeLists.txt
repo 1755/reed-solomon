@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.3)
-project(ReedSolomon)
+project(reed_solomon)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(SOURCE_FILES main.cpp Value.cpp Value.h Decoder.cpp Decoder.h)
-add_executable(ReedSolomon ${SOURCE_FILES})
+set(SOURCE_FILES main.cpp Coder.cpp Coder.h Decoder.cpp Decoder.h Value.cpp Value.h)
+add_executable(reed_solomon ${SOURCE_FILES})
