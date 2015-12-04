@@ -9,6 +9,10 @@ Coder::Coder(int m, int t) {
 vector<int> Coder::encode(vector<int> data) {
     vector<int> message;
 
+    for (int i = 0; i < t*t; i++) {
+        data.push_back(0);
+    }
+
     for (int i = 0; i < data.size(); i++) {
 
         Value symbol;

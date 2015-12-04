@@ -15,6 +15,10 @@ int Value::get_value() {
     return value;
 }
 
+Value Value::get_inverse() {
+    return pow(*this, 6);
+}
+
 
 Value Value::pow(Value v, int p) {
     Value result = Value(1);
@@ -39,6 +43,11 @@ bool Value::operator!=(const Value &rv) {
 
 Value Value::operator+(const Value &rv) {
     return Value(value ^ rv.value);
+}
+
+
+Value Value::operator/(Value &rv) {
+    return (*this)*rv.get_inverse();
 }
 
 

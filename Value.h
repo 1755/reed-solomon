@@ -31,11 +31,15 @@ public:
 
     int get_value();
 
+    Value get_inverse();
+
     static Value pow(Value v, int p);
 
     Value operator+(const Value &rv);
 
     Value operator*(const Value &rv);
+
+    Value operator/(Value &rv);
 
     bool operator==(const Value &rv);
 
