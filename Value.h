@@ -31,11 +31,11 @@ public:
 
     int get_value();
 
+    static Value pow(Value v, int p);
+
     Value operator+(const Value &rv);
 
     Value operator*(const Value &rv);
-
-    Value operator=(const Value &rv);
 
     bool operator==(const Value &rv);
 

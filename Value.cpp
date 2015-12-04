@@ -1,7 +1,9 @@
 #include "Value.h"
 
 
-Value::Value() {}
+Value::Value() {
+    value = 0;
+}
 
 
 Value::Value(int v) {
@@ -14,9 +16,16 @@ int Value::get_value() {
 }
 
 
-Value Value::operator=(const Value &rv) {
-    return rv;
+Value Value::pow(Value v, int p) {
+    Value result = Value(1);
+
+    for (int i = 0; i < p; i++) {
+        result = result * v;
+    }
+
+    return result;
 }
+
 
 bool Value::operator==(const Value &rv) {
     return (value == rv.value);
