@@ -14,6 +14,12 @@ vector<Value> Decoder::decode(vector<Value> codedMessage)
 
 
     vector<Value> decodedMessage = dft.forward(codedMessage);
+    for (int i = 0; i < decodedMessage.size(); ++i) {
+        cout << decodedMessage[i].get_value() << endl;
+    }
+    exit(1);
+
+
     vector<Value> syndromeVector = getSyndromeVector(codedMessage);
 
     bool isZeroSyndrome = true;
@@ -57,7 +63,7 @@ vector<Value> Decoder::getSyndromeVector(const vector<Value> &codedMessage)
 vector<int> Decoder::detectErrorsIndexes(const vector<Value> &locatorVector)
 {
     vector<int> errorsIndexes;
-    for (int i = 0; i < pow(2, m_m); ++i) {
+    /*for (int i = 0; i < pow(2, m_m); ++i) {
         Value x = Value(2); // todo: primirive element in degree
         Value c = Value(1);
         for (int j = 0; j < locatorVector.size(); ++j) {
@@ -66,7 +72,7 @@ vector<int> Decoder::detectErrorsIndexes(const vector<Value> &locatorVector)
         if(c == Value(0)) {
             errorsIndexes.push_back(i);
         }
-    }
+    }*/
 
     return errorsIndexes;
 }
