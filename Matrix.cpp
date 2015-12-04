@@ -38,14 +38,16 @@ Matrix &Matrix::operator=(const Matrix &rvalue)
     return *this;
 }
 
-Matrix &Matrix::reverse() {
-    return <#initializer#>;
+Matrix Matrix::reverse() {
+    // todo: implement me
+    return Matrix(m_height, m_width);
 }
 
 bool operator==(const Matrix &lvalue, const Matrix &rvalue)
 {
-    for (int i = 0; i < m_height; ++i) {
-        for (int j = 0; j < m_width; ++j) {
+    // todo: compare sizes
+    for (int i = 0; i < lvalue.height(); ++i) {
+        for (int j = 0; j < lvalue.width(); ++j) {
             if(lvalue.getValue(i, j) != rvalue.getValue(i, j)) {
                 return false;
             }

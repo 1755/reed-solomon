@@ -14,7 +14,7 @@ public:
     Value getValue(int i, int j) const;
     void setValue(int i, int j, const Value& value);
     Matrix& operator=(const Matrix& rvalue);
-    Matrix& reverse();
+    Matrix reverse();
     int height() const;
     int width() const;
 
