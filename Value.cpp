@@ -11,11 +11,11 @@ Value::Value(int v) {
 }
 
 
-int Value::get_value() {
+int Value::get_value() const{
     return value;
 }
 
-Value Value::get_inverse() {
+Value Value::get_inverse() const {
     return pow(*this, 6);
 }
 
@@ -51,7 +51,7 @@ Value Value::operator/(Value &rv) {
 }
 
 
-Value Value::operator*(const Value &rv) {
+Value Value::operator*(const Value &rv) const {
 
     vector<int> left = from_10_to_2(value);
     vector<int> right = from_10_to_2(rv.value);
@@ -66,7 +66,7 @@ Value Value::operator*(const Value &rv) {
 }
 
 
-vector<int> Value::from_10_to_2(int value) {
+vector<int> Value::from_10_to_2(int value) const {
 
     vector<int> result;
     if (value/2 == 0) {
@@ -80,7 +80,7 @@ vector<int> Value::from_10_to_2(int value) {
 }
 
 
-vector<int> Value::binary_mul(vector<int> factor_1, vector<int> factor_2) {
+vector<int> Value::binary_mul(vector<int> factor_1, vector<int> factor_2) const {
 
     vector<int> result;
 
@@ -106,7 +106,7 @@ vector<int> Value::binary_mul(vector<int> factor_1, vector<int> factor_2) {
 }
 
 
-vector<int> Value::binary_div_reminder(vector<int> dividend, vector<int> divider) {
+vector<int> Value::binary_div_reminder(vector<int> dividend, vector<int> divider) const{
 
     for (int i = divider.size(); i < dividend.size(); i++) {
         divider.push_back(0);
@@ -130,7 +130,7 @@ vector<int> Value::binary_div_reminder(vector<int> dividend, vector<int> divider
 }
 
 
-int Value::from_2_to_10(vector<int> binary) {
+int Value::from_2_to_10(vector<int> binary) const{
     int result = 0;
 
     for (int i = 0; i < binary.size() ; i++) {
@@ -138,4 +138,13 @@ int Value::from_2_to_10(vector<int> binary) {
     }
 
     return result;
+}
+
+Value operator/(const Value &lvalue, const Value &rvalue) {
+    return lvalue * rvalue.get_inverse();
+}
+
+
+Value Value::operator-(const Value &rv) const {
+    return Value(value ^ rv.value);
 }

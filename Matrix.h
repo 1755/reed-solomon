@@ -15,6 +15,7 @@ public:
     void setValue(int i, int j, const Value& value);
     Matrix& operator=(const Matrix& rvalue);
     Matrix reverse();
+    Matrix transpose();
     int height() const;
     int width() const;
 
@@ -25,6 +26,9 @@ public:
     friend Matrix operator+(const Matrix& lvalue, const Matrix& rvalue);
 //    friend Matrix operator-(const Matrix& lvalue, const Matrix& rvalue);
     friend Matrix operator*(const Matrix& lvalue, const Matrix& rvalue);
+    friend Matrix operator*(const Value& lvalue, const Matrix& rvalue);
+    friend std::ostream& operator<<(std::ostream& os, const Matrix& obj);
+
 
 
 };

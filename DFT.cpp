@@ -13,14 +13,14 @@ vector<Value> DFT::forward(vector<Value> dataVector)
         code.push_back(Value(polynomial(dataVector, pow(2, i))));
     }
 
-    return dataVector;
+    return code;
 }
 
 Value DFT::polynomial(vector<Value> dataVector, Value x)
 {
     Value v = Value(0);
     for (int i = 0; i < dataVector.size(); ++i) {
-        v = v + dataVector[i] * Value::pow(x, -i);
+        v = v + dataVector[i] * Value::pow(x, i).get_inverse();
     }
     return v;
 }
