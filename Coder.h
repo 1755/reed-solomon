@@ -1,21 +1,17 @@
 #pragma once
 #include <vector>
+#include "Value.h"
 
 using namespace std;
 
-
 class Coder {
-
 protected:
-
-    int m;
     int t;
 
 
 public:
+    Coder(int t);
 
-    Coder(int m, int t);
-
-    vector<int> encode(vector<int> data);
+    vector<Value> encode(vector<int> data);
 
 };
