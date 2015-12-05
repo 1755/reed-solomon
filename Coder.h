@@ -14,4 +14,6 @@ public:
 
     vector<Value> encode(vector<int> data);
 
+    vector<int> decode(vector<Value> message);
+
 };
