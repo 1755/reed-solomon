@@ -1,13 +1,11 @@
 #include "Coder.h"
-#include "Value.h"
 
-Coder::Coder(int m, int t) {
-    this->m = m;
+Coder::Coder(int t) {
     this->t = t;
 }
 
-vector<int> Coder::encode(vector<int> data) {
-    vector<int> message;
+vector<Value> Coder::encode(vector<int> data) {
+    vector<Value> message;
 
     for (int i = 0; i < t*t; i++) {
         data.push_back(0);
@@ -22,7 +20,7 @@ vector<int> Coder::encode(vector<int> data) {
             symbol = symbol + Value(data[j]) * Value::pow(x, j);
         }
 
-        message.push_back(symbol.get_value());
+        message.push_back(symbol);
     }
 
     return message;

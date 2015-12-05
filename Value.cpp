@@ -1,6 +1,5 @@
 #include "Value.h"
 
-
 Value::Value() {
     value = 0;
 }
@@ -16,7 +15,7 @@ int Value::get_value() const{
 }
 
 Value Value::get_inverse() const {
-    return pow(*this, 6);
+    return pow(*this, GF2m::get_field()->get_capacity() - 2);
 }
 
 
@@ -58,9 +57,7 @@ Value Value::operator*(const Value &rv) const {
 
     vector<int> mul = binary_mul(left, right);
 
-    vector<int> divider = {1, 0, 1, 1};
-
-    vector<int> binary = binary_div_reminder(mul, divider);
+    vector<int> binary = binary_div_reminder(mul, polynomial);
 
     return Value(from_2_to_10(binary));
 }
