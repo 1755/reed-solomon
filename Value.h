@@ -10,7 +10,7 @@ class Value {
 
 private:
 
-    vector<vector<int>> polynomials = {
+    vector<vector<int> > polynomials = {
             {1, 1, 1}, // 2
             {1, 0, 1, 1}, // 3
             {1, 0, 0, 1, 1}, // 4
@@ -28,13 +28,13 @@ private:
             {1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1} // 16
     };
 
-    vector<int> from_10_to_2(int value);
+    vector<int> from_10_to_2(int value) const;
 
-    vector<int> binary_mul(vector<int> factor_1, vector<int> factor_2);
+    vector<int> binary_mul(vector<int> factor_1, vector<int> factor_2) const;
 
-    vector<int> binary_div_reminder(vector<int> dividend, vector<int> divider);
+    vector<int> binary_div_reminder(vector<int> dividend, vector<int> divider) const;
 
-    int from_2_to_10(vector<int> binary);
+    int from_2_to_10(vector<int> binary) const;
 
 
 protected:

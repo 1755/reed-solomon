@@ -1,10 +1,9 @@
 #include "Decoder.h"
 
 
-Decoder::Decoder(int t, int m)
+Decoder::Decoder(int t)
 {
     m_t = t;
-    m_m = m;
 }
 
 vector<Value> Decoder::decode(vector<Value> codedMessage)
@@ -143,6 +142,7 @@ void Decoder::updateCodedMessageInfo(const vector<Value> &codedMessage)
     m_n = int(codedMessage.size() - 2*m_t);
     m_o = 2*m_t;
     m_codedMessageSize = int(codedMessage.size());
+    m_m = GF2m::get_field()->get_m();
 
 }
 

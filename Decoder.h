@@ -16,7 +16,7 @@ class Decoder
     int m_codedMessageSize;
 
 public:
-    Decoder(int t, int m);
+    Decoder(int t);
     vector<Value> decode(vector<Value> codedMessage);
 
 private:
