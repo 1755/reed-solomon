@@ -9,6 +9,10 @@ Value::Value(int v) {
     value = v;
 }
 
+Value::Value(const Value& v) {
+    value = v.get_value();
+}
+
 
 int Value::get_value() const{
     return value;
@@ -144,4 +148,15 @@ Value operator/(const Value &lvalue, const Value &rvalue) {
 
 Value Value::operator-(const Value &rv) const {
     return Value(value ^ rv.value);
+}
+
+std::ostream &operator<<(std::ostream &os, const Value &value) {
+    os << value.get_value();
+    return  os;
+}
+
+
+Value &Value::operator=(const Value &rvalue) {
+    value = rvalue.value;
+    return *this;
 }
