@@ -11,10 +11,6 @@ set(SOURCE_FILES
         Value.h
         Decoder.cpp
         Decoder.h
-        DFT.cpp
-        DFT.h
-        Matrix.cpp
-        Matrix.h
         GF2m.cpp
         GF2m.h
         Channel.cpp
