@@ -29,7 +29,7 @@ public:
     friend Polynomial operator-(const Polynomial& lvalue, const Polynomial& rvalue);
     friend Polynomial operator*(const Polynomial& lvalue, const Polynomial& rvalue);
     friend Polynomial operator*(const Value& lvalue, const Polynomial& rvalue);
-    friend Polynomial operator%(const Value& lvalue, const Polynomial& rvalue);
+    friend Polynomial operator%(const Polynomial& lvalue, const Polynomial& rvalue);
 //    friend Polynomial operator/(const Polynomial& lvalue, const Polynomial& rvalue);
 
     Polynomial& operator=(const Polynomial& rvalue);

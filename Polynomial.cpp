@@ -133,8 +133,24 @@ Polynomial operator*(const Value &lvalue, const Polynomial &rvalue)
     return Polynomial(amul);
 }
 
-Polynomial operator%(const Value &lvalue, const Polynomial &rvalue) {
-    return Polynomial(std::vector<Value>());
+Polynomial operator%(const Polynomial &lvalue, const Polynomial &rvalue)
+{
+    vector<Value> dividend = lvalue.m_valuesVector;
+    while (dividend.size() >= rvalue.m_valuesVector.size()) {
+
+        Value mul = dividend[0];
+        Value div = rvalue.m_valuesVector[0];
+
+        for (int i = 0; i < rvalue.m_valuesVector.size(); i++) {
+            dividend[i] = dividend[i] + mul*(rvalue.m_valuesVector[i]/div);
+        }
+
+        while (dividend.front() == 0 && !dividend.empty()) {
+            dividend.erase(dividend.begin());
+        }
+    }
+
+    return dividend;
 }
 
 std::ostream &operator<<(std::ostream &os, const Polynomial &obj)
