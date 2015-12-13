@@ -49,6 +49,8 @@ public:
 
     Value(int v);
 
+    Value(const Value& v);
+
     int get_value() const;
 
     Value get_inverse() const;
@@ -67,5 +69,9 @@ public:
     bool operator!=(const Value &rv);
 
     friend Value operator/(const Value& lvalue, const Value& rvalue);
+    friend std::ostream& operator<<(std::ostream& os, const Value& value);
+
+
+    Value& operator=(const Value& rvalue);
 
 };
