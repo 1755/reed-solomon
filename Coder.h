@@ -6,14 +6,13 @@ using namespace std;
 
 class Coder {
 protected:
-    int t;
+    unsigned t;
 
 
 public:
-    Coder(int t);
+    Coder(unsigned t);
 
     vector<Value> encode(vector<int> data);
 
-    vector<int> decode(vector<Value> message);
-
+    vector<Value> reminder(vector<Value> dividend, vector<Value> divider);
 };

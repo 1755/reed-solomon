@@ -11,9 +11,10 @@ set(SOURCE_FILES
         Value.h
         Decoder.cpp
         Decoder.h
+        DFT.cpp
+        DFT.h
+        Matrix.cpp
+        Matrix.h
         GF2m.cpp
-        GF2m.h
-        Channel.cpp
-        Channel.h
-        Polynomial.cpp Polynomial.h Error.cpp Error.h)
+        GF2m.h)
 add_executable(reed_solomon ${SOURCE_FILES})
