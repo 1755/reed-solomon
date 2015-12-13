@@ -16,5 +16,5 @@ set(SOURCE_FILES
         Matrix.cpp
         Matrix.h
         GF2m.cpp
-        GF2m.h)
+        GF2m.h Channel.cpp Channel.h)
 add_executable(reed_solomon ${SOURCE_FILES})
