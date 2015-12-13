@@ -30,6 +30,12 @@ int Polynomial::degree() const
     return 0;
 }
 
+
+int Polynomial::size() const
+{
+    return int(m_valuesVector.size());
+}
+
 Value &Polynomial::operator[](int index)
 {
     if(index < 0 || index >= m_valuesVector.size()) {
@@ -50,9 +56,12 @@ Value &Polynomial::operator[](int index)
 Value Polynomial::operator()(const Value &x) const
 {
     Value result = 0;
-    for (int i = int(m_valuesVector.size() - 1); i >= 0 ; --i) {
-        result = result + m_valuesVector[i] * Value::pow(x, i);
+//    cout << "(" << x.get_value() << ")" << endl;
+    for (int i = 0; i < m_valuesVector.size() ; ++i) {
+//        cout << m_valuesVector[i].get_value() << "*" << Value::pow(x, int(m_valuesVector.size() - i - 1)).get_value() << endl;
+        result = result + m_valuesVector[i] * Value::pow(x, int(m_valuesVector.size() - i - 1));
     }
+//    cout << "   ---   " << endl;
     return result;
 }
 
@@ -128,7 +137,7 @@ Polynomial operator*(const Value &lvalue, const Polynomial &rvalue)
 {
     vector<Value> amul;
     for (int i = 0; i <= rvalue.degree(); ++i) {
-        amul[i] = lvalue * rvalue.m_valuesVector[i]; // todo:fixme
+        amul.push_back(lvalue * rvalue.m_valuesVector[i]); // todo:fixme
     }
     return Polynomial(amul);
 }
@@ -183,8 +192,9 @@ std::ostream &operator<<(std::ostream &os, const Polynomial &obj)
 
 Polynomial &Polynomial::operator=(const Polynomial &rvalue)
 {
+    m_valuesVector.clear();
     for (int i = 0; i < rvalue.m_valuesVector.size(); ++i) {
-        m_valuesVector[i] = rvalue.m_valuesVector[i];
+        m_valuesVector.push_back(rvalue.m_valuesVector[i]);
     }
     return *this;
 }

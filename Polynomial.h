@@ -16,6 +16,7 @@ public:
     void name(const string& name);
     const string& name() const;
     int degree() const;
+    int size() const;
 
 public:
     Value& operator[](int index);
