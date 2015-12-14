@@ -8,17 +8,18 @@ using namespace std;
 
 class Polynomial
 {
-    static const bool DEBUG = false;
     vector<Value> m_valuesVector;
     string m_name;
-
+    static bool m_debug;
 public:
     Polynomial(const vector<Value>& valuesVector);
     void name(const string& name);
     const string& name() const;
     int degree() const;
     int size() const;
-    void debug() const;
+    static bool debug();
+    static void debug(bool flag);
+    void debugPrint() const;
 
 public:
     Value& operator[](int index);

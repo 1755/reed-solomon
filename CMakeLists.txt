@@ -18,5 +18,5 @@ set(SOURCE_FILES
         Error.cpp
         Error.h
         GF2m.cpp
-        GF2m.h)
+        GF2m.h Test.cpp Test.h)
 add_executable(reed_solomon ${SOURCE_FILES})

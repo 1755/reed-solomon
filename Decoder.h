@@ -9,6 +9,7 @@ using namespace std;
 class Decoder
 {
     int m_t;
+    int m_n;
     map<int, int> m_logarithmsTable; // fixme
 
 public:
@@ -16,15 +17,27 @@ public:
     vector<Value> decode(vector<Value> codedMessage);
 
     Value log(const Value& value);
+    void debug(bool flag);
+
 public:
 
 
-    class LocatorPolynomial : Error
+    class FixedSyndromeError : public Error
     {
     public:
-        LocatorPolynomial() : Error() {};
-        LocatorPolynomial(const string& message) : Error(message) {};
+        FixedSyndromeError() : Error() {};
+        FixedSyndromeError(const string& message) : Error(message) {};
     };
+
+
+    class LocatorPolynomialError : public Error
+    {
+    public:
+        LocatorPolynomialError() : Error() {};
+        LocatorPolynomialError(const string& message) : Error(message) {};
+    };
+
+
 protected:
     Polynomial calculateSyndromePolynomial(const Polynomial &C);
     Polynomial calculateLocatorPolynomial(Polynomial &S); // fixme: const

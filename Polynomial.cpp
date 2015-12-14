@@ -4,6 +4,8 @@
 
 #include "Polynomial.h"
 
+static bool s_debug;
+
 Polynomial::Polynomial(const vector<Value> &valuesVector)
 {
     m_valuesVector = valuesVector;
@@ -200,9 +202,19 @@ Polynomial &Polynomial::operator=(const Polynomial &rvalue)
 }
 
 
-void Polynomial::debug() const
+bool Polynomial::debug()
 {
-    if(Polynomial::DEBUG) {
+    return s_debug;
+}
+
+void Polynomial::debug(bool flag)
+{
+    s_debug = flag;
+}
+
+void Polynomial::debugPrint() const
+{
+    if(debug()) {
         cout << *this << endl;
     }
 }

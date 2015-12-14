@@ -17,7 +17,7 @@ void Channel::add_message(vector<Value> message) {
 
     for (int i=0; i<t; i++) {
         int position = rand() % freak + freak * i;
-        message[position] = message[position] + Value(rand() % message.size());
+        message[position] = message[position] + Value(1 + rand() % (GF2m::get_field()->get_capacity() - 1));
     }
 
     messages.push_back(message);
