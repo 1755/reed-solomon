@@ -10,14 +10,9 @@ class Value {
 
 private:
 
-    vector<int> from_10_to_2(int value) const;
-
     vector<int> binary_mul(vector<int> factor_1, vector<int> factor_2) const;
 
     vector<int> binary_div_reminder(vector<int> dividend, vector<int> divider) const;
-
-    int from_2_to_10(vector<int> binary) const;
-
 
 protected:
 
@@ -36,6 +31,10 @@ public:
     int get_value() const;
 
     Value get_inverse() const;
+
+    static vector<int> from_10_to_2(int value);
+
+    static int from_2_to_10(vector<int> binary);
 
     static Value pow(Value v, int p);
 

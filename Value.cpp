@@ -67,7 +67,7 @@ Value Value::operator*(const Value &rv) const {
 }
 
 
-vector<int> Value::from_10_to_2(int value) const {
+vector<int> Value::from_10_to_2(int value) {
 
     vector<int> result;
     if (value/2 == 0) {
@@ -131,7 +131,7 @@ vector<int> Value::binary_div_reminder(vector<int> dividend, vector<int> divider
 }
 
 
-int Value::from_2_to_10(vector<int> binary) const{
+int Value::from_2_to_10(vector<int> binary){
     int result = 0;
 
     for (int i = 0; i < binary.size() ; i++) {
