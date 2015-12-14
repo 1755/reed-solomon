@@ -8,6 +8,7 @@ using namespace std;
 
 class Polynomial
 {
+    static const bool DEBUG = false;
     vector<Value> m_valuesVector;
     string m_name;
 
@@ -17,6 +18,7 @@ public:
     const string& name() const;
     int degree() const;
     int size() const;
+    void debug() const;
 
 public:
     Value& operator[](int index);

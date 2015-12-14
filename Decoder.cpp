@@ -4,23 +4,18 @@
 Decoder::Decoder(int t)
 {
     m_t = t;
+    initLogarithmTable();
 }
 
 vector<Value> Decoder::decode(vector<Value> codedMessage)
 {
-    cout << "CODED: " << endl;
-    for(auto it = codedMessage.begin(); it != codedMessage.end(); it++) {
-        cout << (*it).get_value() << " ";
-    }
-    cout << endl << endl;
-
     Polynomial C(codedMessage);
     C.name("C");
-    cout << C << endl;
+    C.debug();
 
     Polynomial S = calculateSyndromePolynomial(C);
     S.name("S");
-    cout << S << endl;
+    S.debug();
 
     /** IF ZERO SYNDROME **/
     bool isZeroSyndrome = true;
@@ -40,32 +35,43 @@ vector<Value> Decoder::decode(vector<Value> codedMessage)
 
     Polynomial LAMBDA = calculateLocatorPolynomial(S);
     LAMBDA.name("LAMBDA");
-    cout << LAMBDA << endl;
+    LAMBDA.debug();
 
-    /** CALCULATE LOCATOR'S ROOTS **/
-    vector<Value> locatorRoots = calculateLocatorRoots(LAMBDA);
-    cout << "Locator roots: ";
-    for (int i = 0; i < locatorRoots.size(); ++i) {
-        cout << locatorRoots[i].get_value() << " ";
-    }
-    cout << endl;
-    /** CALCULATE LOCATOR'S ROOTS **/
 
-    if(locatorRoots.size() != LAMBDA.degree()) {
-        throw exception(); // todo: throw "true" exception
-    }
-
-    for (int alpha = 0; alpha < GF2m::get_field()->get_capacity(); ++alpha) {
-        for (int u = 0; alpha < GF2m::get_field()->get_capacity(); ++u) {
-            if(locatorRoots[0] == Value(1)/Value(Value::pow(alpha, u))) {
-                cout << u << endl;
-            }
+    // todo: check boundaries
+    vector<Value> errorPositions = calculateErrorsPosition(LAMBDA);
+    if(true) {
+        cout << "Error positions: ";
+        for (int i = 0; i < errorPositions.size(); ++i) {
+            cout << errorPositions[i].get_value() << " ";
         }
+        cout << endl;
     }
 
+    Polynomial SIGMA = calculateSigmaPolynomial(S, LAMBDA, errorPositions);
+    SIGMA.name("SIGMA");
+    SIGMA.debug();
+
+    Polynomial LAMBDAD = calculateLocatorDerivativePolynomial(LAMBDA, errorPositions);
+    LAMBDAD.name("LAMBDA'");
+    LAMBDAD.debug();
 
 
-    return codedMessage;
+    Polynomial E = calculateCorrectionPolynomial(codedMessage, SIGMA, LAMBDAD, errorPositions);
+    E.name("~E");
+    E.debug();
+
+    Polynomial F =  C + E;
+    F.name("~F");
+    F.debug();
+
+
+    vector<Value> decodedMessage;
+    for (int i = 0; i < F.size() - 2*m_t; ++i) {
+        decodedMessage.push_back(F[i]);
+    }
+
+    return decodedMessage;
 }
 
 Polynomial Decoder::calculateSyndromePolynomial(const Polynomial &C)
@@ -125,13 +131,82 @@ Polynomial Decoder::calculateLocatorPolynomial(Polynomial &S)
 
 }
 
-vector<Value> Decoder::calculateLocatorRoots(Polynomial &LAMBDA)
+vector<Value> Decoder::calculateErrorsPosition(Polynomial &LAMBDA)
 {
-    vector<Value> roots;
+    vector<Value> positions;
     for (int i = 1; i < GF2m::get_field()->get_capacity(); ++i) {
         if(LAMBDA(Value(i)) == 0) {
-            roots.push_back(Value(i));
+            positions.push_back(this->log(Value(i).get_inverse()));
         }
     }
-    return roots;
+
+
+    if(positions.size() != LAMBDA.degree()) {
+        throw exception(); // todo: throw "true" exception
+    }
+
+    return positions;
 }
+
+Polynomial Decoder::calculateSigmaPolynomial(Polynomial &S, Polynomial &LAMBDA, vector<Value> errorPositions)
+{
+    vector<Value> sigma(errorPositions.size());
+    for (int q = 0; q < errorPositions.size(); ++q) {
+        Value c = 0;
+        for (int i = 0; i <= q; ++i) {
+            c = c + LAMBDA[LAMBDA.size()-i-1] * S[q-i];
+        }
+        sigma[q] = c;
+    }
+    reverse(sigma.begin(), sigma.end());
+
+    return Polynomial(sigma);
+}
+
+Polynomial Decoder::calculateLocatorDerivativePolynomial(Polynomial &LAMBDA, vector<Value> &errorsPosition)
+{
+    vector<Value> derivative(errorsPosition.size());
+    for (int j = 1; j < LAMBDA.size(); ++j) {
+        if(j%2 == 1) {
+            derivative[j] = LAMBDA[j];
+        }else{
+            derivative[j] = 0;
+        }
+    }
+    return Polynomial(derivative);
+}
+
+Polynomial Decoder::calculateCorrectionPolynomial(vector<Value> &codedMessage, Polynomial &SIGMA, Polynomial &LAMBDAD,
+                                                  vector<Value> &errorPositions)
+{
+    vector<Value> corrector(codedMessage.size());
+    for (int i = 0; i < codedMessage.size(); ++i) {
+        corrector[i] = 0;
+    }
+
+    for (int i = 0; i < errorPositions.size(); ++i) {
+        int idx = int(codedMessage.size() - errorPositions[i].get_value() - 1);
+        Value a = Value::pow(2, errorPositions[i].get_value()).get_inverse();
+        corrector[idx] = (SIGMA(a)/LAMBDAD(a));
+    }
+
+    return Polynomial(corrector);
+}
+
+void Decoder::initLogarithmTable()
+{
+    m_logarithmsTable = map<int, int>();
+    Value a = 2;
+    for (int i = 0; i < GF2m::get_field()->get_capacity() - 1; ++i) {
+        m_logarithmsTable[Value::pow(a, i).get_value()] = i;
+    }
+
+}
+
+Value Decoder::log(const Value &value)
+{
+    return Value(m_logarithmsTable[value.get_value()]);
+}
+
+
+

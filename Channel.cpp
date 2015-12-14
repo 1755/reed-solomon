@@ -10,7 +10,7 @@ Channel::Channel(int t) {
 
 void Channel::add_message(vector<Value> message) {
 
-    srand((unsigned)time(0));
+    srand((unsigned)(clock() + time(0)));
 
     int freak = message.size() / t;
 

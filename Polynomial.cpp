@@ -200,3 +200,9 @@ Polynomial &Polynomial::operator=(const Polynomial &rvalue)
 }
 
 
+void Polynomial::debug() const
+{
+    if(Polynomial::DEBUG) {
+        cout << *this << endl;
+    }
+}

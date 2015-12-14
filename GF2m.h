@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <map>
 
 using namespace std;
 
@@ -31,10 +32,15 @@ private:
     GF2m() {}
 
     int m;
+
 public:
+
     static GF2m *get_field() {
         if(!field)
             field = new GF2m();
+
+
+
         return field;
     }
 
