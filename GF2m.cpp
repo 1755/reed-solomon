@@ -15,3 +15,8 @@ int GF2m::get_m() {
 int GF2m::get_capacity() {
     return 1 << m;
 }
+
+
+vector<int> GF2m::get_p() {
+    return polynomials[m - 2];
+}
