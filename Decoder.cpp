@@ -166,8 +166,6 @@ Polynomial Decoder::calculateLocatorPolynomial(Polynomial &S)
         q = q + 1;
     }*/
 
-//    LAMBDA.debug();
-
     if(LAMBDA.degree() != L) {
         throw LocatorPolynomialError("Locator polynomial(LAMBDA) did't found");
     }

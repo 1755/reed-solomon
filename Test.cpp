@@ -10,9 +10,9 @@ void Test::run()
 
     int max_iter = 500;
     int over_t = 2;
-    int max_info_length = 10;
+    int max_info_length = 5;
 
-    for (int l = 3; l < max_info_length; ++l) {
+    for (int l = 3; l <= max_info_length; ++l) {
         for (int t = 2; t <= l; ++t) {
             Coder coder(t);
             Decoder decoder(t);
@@ -25,7 +25,8 @@ void Test::run()
                 for (int i = 0; i < max_iter; ++i) {
                     vector<int> infoMessage(l);
                     for (int j = 0; j < infoMessage.size(); ++j) {
-                        infoMessage[j] = rand()%(GF2m::get_field()->get_capacity() - 1);
+//                        infoMessage[j] = rand()%(GF2m::get_field()->get_capacity() - 1);
+                        infoMessage[j] = 32 + rand()%(127);
                     }
 
                     vector<Value> code;
@@ -120,7 +121,7 @@ void Test::run()
                             printf("%3d ", decode[j].get_value());
                         }
                         cout << endl;
-
+                        errors++;
                     }
                 }
                 clock_t end_time = clock();
