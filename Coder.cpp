@@ -83,5 +83,9 @@ vector<Value> Coder::reminder(vector<Value> dividend, vector<Value> divider) {
         }
     }
 
+    for (int i = dividend.size(); i < t*2; i++) {
+        dividend.insert(dividend.begin(), 0);
+    }
+
     return dividend;
 }
