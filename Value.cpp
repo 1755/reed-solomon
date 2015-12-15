@@ -26,8 +26,15 @@ Value Value::get_inverse() const {
 Value Value::pow(Value v, int p) {
     Value result = Value(1);
 
-    for (int i = 0; i < p; i++) {
-        result = result * v;
+    while (p) {
+        if (p%2==0) {
+            p /= 2;
+            v = v*v;
+        }
+        else {
+            p--;
+            result = result * v;
+        }
     }
 
     return result;

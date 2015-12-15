@@ -4,6 +4,7 @@
 #include "Coder.h"
 #include "Channel.h"
 #include "Decoder.h"
+#include <time.h>
 
 using namespace std;
 
