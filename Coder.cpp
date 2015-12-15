@@ -1,4 +1,5 @@
 #include "Coder.h"
+#include "Polynomial.h"
 
 Coder::Coder(unsigned t) {
     this->t = t;
@@ -51,14 +52,9 @@ vector<Value> Coder::encode(vector<int> data) {
         M.push_back(R[i]);
     }
 
-
-//    Value check = 0;
-//
-//    for (int i = 1; i <= r; i++) {
-//        for (int k = 0; k < M.size(); k++) {
-//            check = check + M[k]*Value::pow(Value::pow(2, i), M.size() - k - 1);
-//        }
-//    }
+    if (!coder_check(r, M, G)) {
+        throw Error("Coder error!");
+    }
 
     return M;
 }
@@ -88,4 +84,39 @@ vector<Value> Coder::reminder(vector<Value> dividend, vector<Value> divider) {
     }
 
     return dividend;
+}
+
+bool Coder::coder_check(unsigned r, vector<Value> F, vector<Value> G) {
+
+//    F = {158, 83, 196, 118, 211, 57, 191};
+
+    vector<Value> syndrome = vector<Value>(r);
+
+    for (int i = 1; i <= r; i++) {
+        syndrome[i - 1] = 0;
+        for (int k = 0; k < F.size(); k++) {
+            syndrome[i - 1] = syndrome[i - 1] + F[k]*Value::pow(Value::pow(2, i), F.size() - k - 1);
+        }
+    }
+
+    for (int i = 0; i < r; i++) {
+        if (syndrome[i].get_value() != 0) {
+            for (int k = 0; k < syndrome.size(); k++) {
+                cout << syndrome[k] << " ";
+            }
+            cout << endl;
+            return false;
+        }
+    }
+
+    Polynomial G_check = Polynomial(G);
+    Polynomial F_check = Polynomial(F);
+
+    Polynomial rem_check = F_check % G_check;
+
+    if (rem_check.size() != 0) {
+        return false;
+    }
+
+    return true;
 }
