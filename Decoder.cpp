@@ -91,32 +91,46 @@ Polynomial Decoder::calculateSyndromePolynomial(const Polynomial &C)
     for (int i = 1; i <= 2 * m_t; ++i) {
         S.push_back(C(Value::pow(2, i)));
     }
-//    reverse(S.begin(), S.end());
+    reverse(S.begin(), S.end());
     return Polynomial(S);
 }
 
 Polynomial Decoder::calculateLocatorPolynomial(Polynomial &S)
 {
-    /*Polynomial LAMBDA({1});
+    Polynomial LAMBDA({1});
     Polynomial B({1,0});
     int q = 0;
     int L = 0;
     int m = -1;
     Value dq = 0;
 
-    cout << S << endl;
-
     while(q != 2*m_t) {
         dq = 0;
         for (int i = 0; i <= L; ++i) {
-            dq = dq + LAMBDA[LAMBDA.size() - i - 1] * S[q-i];
+            dq = dq + LAMBDA[LAMBDA.size() - i - 1] * S[S.size() - (q-i) - 1];
         }
+
+        if(dq  != 0) {
+            Polynomial LAMBDAA = LAMBDA + dq*B;
+            if(L < q - m) {
+                int LA = q - m;
+                m = q - L;
+                L = LA;
+                B = dq.get_inverse() * LAMBDA;
+            }
+
+            LAMBDA = LAMBDAA;
+        }
+        B = Polynomial({1,0})*B;
+        q++;
     }
 
-    exit(1);*/
+    //cout << LAMBDA << endl;
+
+    //exit(1);
 
     // todo: Проверить, то ли я дурак, то ли опечатка в алгоритме
-    Polynomial LAMBDA({1});
+    /*Polynomial LAMBDA({1});
     Polynomial B({1,0});
     int q = 0;
     int L = 0;
@@ -150,9 +164,9 @@ Polynomial Decoder::calculateLocatorPolynomial(Polynomial &S)
         B = Polynomial({1,0})*B;
 
         q = q + 1;
-    }
+    }*/
 
-    LAMBDA.debug();
+//    LAMBDA.debug();
 
     if(LAMBDA.degree() != L) {
         throw LocatorPolynomialError("Locator polynomial(LAMBDA) did't found");
@@ -175,6 +189,12 @@ vector<Value> Decoder::calculateErrorsPosition(Polynomial &LAMBDA)
         }
     }
 
+//    for (int i = 0; i < positions.size(); ++i) {
+//        cout << positions[i] << " ";
+//    }
+//    cout << endl;
+//    exit(11);
+
 
     if(positions.size() != LAMBDA.degree()) {
         throw LocatorPolynomialError("Locator polynomial(LAMBDA) did't found [2]");
@@ -189,7 +209,7 @@ Polynomial Decoder::calculateSigmaPolynomial(Polynomial &S, Polynomial &LAMBDA, 
     for (int q = 0; q < errorPositions.size(); ++q) {
         Value c = 0;
         for (int i = 0; i <= q; ++i) {
-            c = c + LAMBDA[LAMBDA.size()-i-1] * S[q-i];
+            c = c + LAMBDA[LAMBDA.size()-i-1] * S[S.size() - (q-i) - 1];
         }
         sigma[q] = c;
     }
@@ -201,12 +221,21 @@ Polynomial Decoder::calculateSigmaPolynomial(Polynomial &S, Polynomial &LAMBDA, 
 Polynomial Decoder::calculateLocatorDerivativePolynomial(Polynomial &LAMBDA, vector<Value> &errorsPosition)
 {
     vector<Value> derivative(errorsPosition.size());
-    for (int j = 1; j < LAMBDA.size(); ++j) {
-        if(j%2 == 1) {
-            derivative[j] = LAMBDA[j];
+    for (int j = 0; j < errorsPosition.size(); ++j) {
+        if(errorsPosition.size() % 2 == 0) {
+            if (j % 2 == 1) {
+                derivative[j] = LAMBDA[j];
+            } else {
+                derivative[j] = 0;
+            }
         }else{
-            derivative[j] = 0;
+            if (j % 2 == 1) {
+                derivative[j] = 0;
+            } else {
+                derivative[j] = LAMBDA[j];
+            }
         }
+
     }
     return Polynomial(derivative);
 }

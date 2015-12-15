@@ -41,7 +41,7 @@ int Polynomial::size() const
 Value &Polynomial::operator[](int index)
 {
     if(index < 0 || index >= m_valuesVector.size()) {
-        throw new IndexError("Polynomial index error");
+        throw IndexError("Polynomial index error");
     }
     return m_valuesVector[index];
 }

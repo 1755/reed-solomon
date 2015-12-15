@@ -42,7 +42,7 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Polynomial& obj);
 
 public:
-    class IndexError : Error
+    class IndexError : public Error
     {
     public:
         IndexError() : Error() {};
