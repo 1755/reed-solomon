@@ -4,6 +4,8 @@
 
 #include "Polynomial.h"
 
+static bool s_debug;
+
 Polynomial::Polynomial(const vector<Value> &valuesVector)
 {
     m_valuesVector = valuesVector;
@@ -39,7 +41,7 @@ int Polynomial::size() const
 Value &Polynomial::operator[](int index)
 {
     if(index < 0 || index >= m_valuesVector.size()) {
-        throw new IndexError("Polynomial index error");
+        throw IndexError("Polynomial index error");
     }
     return m_valuesVector[index];
 }
@@ -200,9 +202,19 @@ Polynomial &Polynomial::operator=(const Polynomial &rvalue)
 }
 
 
-void Polynomial::debug() const
+bool Polynomial::debug()
 {
-    if(Polynomial::DEBUG) {
+    return s_debug;
+}
+
+void Polynomial::debug(bool flag)
+{
+    s_debug = flag;
+}
+
+void Polynomial::debugPrint() const
+{
+    if(debug()) {
         cout << *this << endl;
     }
 }

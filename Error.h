@@ -12,6 +12,7 @@ class Error : exception
 public:
     Error();
     Error(const string& message);
+    string message() const;
 };
 
 

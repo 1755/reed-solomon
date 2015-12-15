@@ -13,3 +13,8 @@ Error::Error(const string& message)
 {
     m_message = message;
 }
+
+string Error::message() const
+{
+    return m_message;
+}

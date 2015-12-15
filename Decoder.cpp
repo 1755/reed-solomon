@@ -9,13 +9,16 @@ Decoder::Decoder(int t)
 
 vector<Value> Decoder::decode(vector<Value> codedMessage)
 {
+
+    m_n = int(codedMessage.size());
+
     Polynomial C(codedMessage);
     C.name("C");
-    C.debug();
+    C.debugPrint();
 
     Polynomial S = calculateSyndromePolynomial(C);
     S.name("S");
-    S.debug();
+    S.debugPrint();
 
     /** IF ZERO SYNDROME **/
     bool isZeroSyndrome = true;
@@ -35,12 +38,12 @@ vector<Value> Decoder::decode(vector<Value> codedMessage)
 
     Polynomial LAMBDA = calculateLocatorPolynomial(S);
     LAMBDA.name("LAMBDA");
-    LAMBDA.debug();
+    LAMBDA.debugPrint();
 
 
     // todo: check boundaries
     vector<Value> errorPositions = calculateErrorsPosition(LAMBDA);
-    if(true) {
+    if(Polynomial::debug()) {
         cout << "Error positions: ";
         for (int i = 0; i < errorPositions.size(); ++i) {
             cout << errorPositions[i].get_value() << " ";
@@ -50,20 +53,28 @@ vector<Value> Decoder::decode(vector<Value> codedMessage)
 
     Polynomial SIGMA = calculateSigmaPolynomial(S, LAMBDA, errorPositions);
     SIGMA.name("SIGMA");
-    SIGMA.debug();
+    SIGMA.debugPrint();
 
     Polynomial LAMBDAD = calculateLocatorDerivativePolynomial(LAMBDA, errorPositions);
     LAMBDAD.name("LAMBDA'");
-    LAMBDAD.debug();
+    LAMBDAD.debugPrint();
 
 
     Polynomial E = calculateCorrectionPolynomial(codedMessage, SIGMA, LAMBDAD, errorPositions);
     E.name("~E");
-    E.debug();
+    E.debugPrint();
 
     Polynomial F =  C + E;
     F.name("~F");
-    F.debug();
+    F.debugPrint();
+
+
+    Polynomial SCHECK = calculateSyndromePolynomial(F);
+    for (int i = 0; i < SCHECK.size(); ++i) {
+        if(SCHECK[i] != 0) {
+            throw FixedSyndromeError("Fixed syndrome is't zero");
+        }
+    }
 
 
     vector<Value> decodedMessage;
@@ -80,14 +91,46 @@ Polynomial Decoder::calculateSyndromePolynomial(const Polynomial &C)
     for (int i = 1; i <= 2 * m_t; ++i) {
         S.push_back(C(Value::pow(2, i)));
     }
-//    reverse(S.begin(), S.end());
+    reverse(S.begin(), S.end());
     return Polynomial(S);
 }
 
 Polynomial Decoder::calculateLocatorPolynomial(Polynomial &S)
 {
-    // todo: Проверить, то ли я дурак, то ли опечатка в алгоритме
     Polynomial LAMBDA({1});
+    Polynomial B({1,0});
+    int q = 0;
+    int L = 0;
+    int m = -1;
+    Value dq = 0;
+
+    while(q != 2*m_t) {
+        dq = 0;
+        for (int i = 0; i <= L; ++i) {
+            dq = dq + LAMBDA[LAMBDA.size() - i - 1] * S[S.size() - (q-i) - 1];
+        }
+
+        if(dq  != 0) {
+            Polynomial LAMBDAA = LAMBDA + dq*B;
+            if(L < q - m) {
+                int LA = q - m;
+                m = q - L;
+                L = LA;
+                B = dq.get_inverse() * LAMBDA;
+            }
+
+            LAMBDA = LAMBDAA;
+        }
+        B = Polynomial({1,0})*B;
+        q++;
+    }
+
+    //cout << LAMBDA << endl;
+
+    //exit(1);
+
+    // todo: Проверить, то ли я дурак, то ли опечатка в алгоритме
+    /*Polynomial LAMBDA({1});
     Polynomial B({1,0});
     int q = 0;
     int L = 0;
@@ -121,10 +164,10 @@ Polynomial Decoder::calculateLocatorPolynomial(Polynomial &S)
         B = Polynomial({1,0})*B;
 
         q = q + 1;
-    }
+    }*/
 
     if(LAMBDA.degree() != L) {
-        throw LocatorPolynomial("Locator polynomial(LAMBDA) did't found");
+        throw LocatorPolynomialError("Locator polynomial(LAMBDA) did't found");
     }
 
     return LAMBDA;
@@ -136,13 +179,23 @@ vector<Value> Decoder::calculateErrorsPosition(Polynomial &LAMBDA)
     vector<Value> positions;
     for (int i = 1; i < GF2m::get_field()->get_capacity(); ++i) {
         if(LAMBDA(Value(i)) == 0) {
-            positions.push_back(this->log(Value(i).get_inverse()));
+            Value position = this->log(Value(i).get_inverse());
+            if(position.get_value() < 0 || position.get_value() >= m_n) {
+                throw LocatorPolynomialError("Locator polynomial(LAMBDA) did't found [3]");
+            }
+            positions.push_back(position);
         }
     }
 
+//    for (int i = 0; i < positions.size(); ++i) {
+//        cout << positions[i] << " ";
+//    }
+//    cout << endl;
+//    exit(11);
+
 
     if(positions.size() != LAMBDA.degree()) {
-        throw exception(); // todo: throw "true" exception
+        throw LocatorPolynomialError("Locator polynomial(LAMBDA) did't found [2]");
     }
 
     return positions;
@@ -154,7 +207,7 @@ Polynomial Decoder::calculateSigmaPolynomial(Polynomial &S, Polynomial &LAMBDA, 
     for (int q = 0; q < errorPositions.size(); ++q) {
         Value c = 0;
         for (int i = 0; i <= q; ++i) {
-            c = c + LAMBDA[LAMBDA.size()-i-1] * S[q-i];
+            c = c + LAMBDA[LAMBDA.size()-i-1] * S[S.size() - (q-i) - 1];
         }
         sigma[q] = c;
     }
@@ -166,12 +219,21 @@ Polynomial Decoder::calculateSigmaPolynomial(Polynomial &S, Polynomial &LAMBDA, 
 Polynomial Decoder::calculateLocatorDerivativePolynomial(Polynomial &LAMBDA, vector<Value> &errorsPosition)
 {
     vector<Value> derivative(errorsPosition.size());
-    for (int j = 1; j < LAMBDA.size(); ++j) {
-        if(j%2 == 1) {
-            derivative[j] = LAMBDA[j];
+    for (int j = 0; j < errorsPosition.size(); ++j) {
+        if(errorsPosition.size() % 2 == 0) {
+            if (j % 2 == 1) {
+                derivative[j] = LAMBDA[j];
+            } else {
+                derivative[j] = 0;
+            }
         }else{
-            derivative[j] = 0;
+            if (j % 2 == 1) {
+                derivative[j] = 0;
+            } else {
+                derivative[j] = LAMBDA[j];
+            }
         }
+
     }
     return Polynomial(derivative);
 }
@@ -209,4 +271,7 @@ Value Decoder::log(const Value &value)
 }
 
 
-
+void Decoder::debug(bool flag)
+{
+    Polynomial::debug(flag);
+}
