@@ -19,7 +19,7 @@ int Value::get_value() const{
 }
 
 Value Value::get_inverse() const {
-    return pow(*this, GF2m::get_field()->get_capacity() - 2);
+    return GF2m::get_field()->inverse[this->value];
 }
 
 
